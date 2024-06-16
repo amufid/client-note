@@ -1,15 +1,15 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../provider/authProvider.jsx";
 import { ProtectedRoute } from "./ProtectedRoute";
-import Register from '../pages/Register.jsx'
-import Login from '../pages/Login.jsx'
-import Note from "../pages/Note.jsx";
-import Category from "../pages/Category.jsx";
-import DetailNote from "../pages/DetailNote.jsx";
-import Tag from "../pages/Tag.jsx";
+import Register from '../pages/auth/Register.jsx'
+import Login from '../pages/auth/Login.jsx'
+import Note from "../pages/note/Note.jsx";
+import Category from "../pages/category/Category.jsx";
+import DetailNote from "../pages/note/DetailNote.jsx";
+import Tag from "../pages/tag/Tag.jsx";
 import Profile from "../pages/EditProfile.jsx";
-import DetailCategory from "../pages/DetailCategory.jsx";
-import DetailTag from "../pages/DetailTag.jsx";
+import DetailCategory from "../pages/category/DetailCategory.jsx";
+import DetailTag from "../pages/tag/DetailTag.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 
 const Routes = () => {
