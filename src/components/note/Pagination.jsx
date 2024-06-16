@@ -50,7 +50,7 @@ const Pagination = ({ currentPage, onPageChange, totalPages }) => {
       <div className="flex justify-center items-center py-5">
          {totalPages === 1 ? null :
             <Button
-               color={`${currentPage === 1 ? 'purple' : 'gray'}`}
+               color='gray'
                className='mr-1'
                onClick={() => onPageChange(currentPage - 1)}
                disabled={currentPage === 1}
@@ -71,7 +71,7 @@ const Pagination = ({ currentPage, onPageChange, totalPages }) => {
          ))}
          {totalPages === 1 ? null :
             <Button
-               color={`${currentPage === totalPages ? 'purple' : 'gray'}`}
+               color='gray'
                className='mr-1'
                onClick={() => onPageChange(currentPage + 1)}
                disabled={currentPage === totalPages}

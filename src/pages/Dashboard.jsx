@@ -9,9 +9,9 @@ export default function Dashboard() {
    return (
       <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
          <div className='w-full'>
-            <div className='mx-5 md:mx-60 sm:mx-20 h-auto sm:h-screen justify-between flex flex-col sm:flex-row items-center'>
+            <div className='mx-5 md:mx-60 sm:mx-20 h-screen justify-between flex flex-col sm:flex-row items-center'>
                <div className='w-full sm:w-1/2 px-10 sm:px-5'>
-                  <div className='animate-slidein opacity-0 [--slidein-delay:300ms]'>
+                  <div className='animate-slidein opacity-0 [--slidein-delay:300ms] mt-20 sm:mt-0'>
                      <h1 className='text-5xl text-black dark:text-slate-200 my-5 font-serif'>Welcome to My Note</h1>
                   </div>
                   <div className='animate-slidein opacity-0 [--slidein-delay:500ms]'>
@@ -23,7 +23,7 @@ export default function Dashboard() {
                      <Link to='/login'><Button size='lg' className='w-44'>Get started free</Button></Link>
                   </div>
                </div>
-               <div className='mr-5 animate-slidein opacity-0 [--slidein-delay:700ms]'>
+               <div className='mr-5 animate-slidein opacity-0 [--slidein-delay:700ms] mb-32 sm:mb-0'>
                   <img src="/src/assets/dash.png" className='w-[420px]' alt="dash" />
                </div>
             </div>

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import instance from "../lib/instance";
+import instance from "../../lib/instance";
 import { Table, Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
-import ModalAddCategory from "../components/category/ModalAddCategory";
+import ModalAddCategory from "../../components/category/ModalAddCategory";
 import toast from "react-hot-toast";
 import { FiDelete } from "react-icons/fi";
 import { FaRegEdit } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { encrypt } from "../lib/encryptDecrypt";
+import { encrypt } from "../../lib/encryptDecrypt";
 
 export default function Category() {
    const [categories, setCategories] = useState([]);
@@ -86,7 +86,7 @@ export default function Category() {
       <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
          <h1 className="text-2xl py-5 text-center text-black dark:text-white">List Categories</h1>
          <ModalAddCategory refetch={getCategories} />
-         <div className="overflow-x-auto mx-auto w-[400px] sm:w-[500px] pb-10 shadow-sm">
+         <div className="overflow-x-auto mx-auto w-auto sm:w-[500px] pb-10 shadow-sm">
             <Table hoverable>
                <Table.Head>
                   <Table.HeadCell>Name</Table.HeadCell>
@@ -99,8 +99,8 @@ export default function Category() {
                         <Table.Cell><Link to={`/category/${encrypt(category.id)}`} className="hover:underline hover:text-blue-400">{category.name}</Link></Table.Cell>
                         <Table.Cell>{category.description}</Table.Cell>
                         <Table.Cell>
-                           <div className="flex flex-row">
-                              <div className="flex justify-center mr-2">
+                           <div className="flex flex-col sm:flex-row">
+                              <div className="flex justify-center mr-0 sm:mr-2 mb-1 sm:mb-0">
                                  <Button color='red' size='sm' value={category.id} onClick={() => getIdDelete(category.id)}><FiDelete /></Button>
                               </div>
                               <Modal show={modalDelete} size="md"

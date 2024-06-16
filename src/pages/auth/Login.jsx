@@ -1,5 +1,5 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import instance from "../lib/instance";
+import instance from "../../lib/instance";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate, Link } from "react-router-dom";

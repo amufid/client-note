@@ -1,5 +1,5 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import instance from "../lib/instance";
+import instance from "../../lib/instance";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
