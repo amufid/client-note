@@ -1,33 +1,33 @@
-import instance from '../lib/instance'
+import instance from '../../lib/instance'
 import { useState, useEffect, useCallback } from 'react'
-import { Card, Button, Modal, FileInput, FloatingLabel, Spinner } from "flowbite-react";
-import ModalAdd from '../components/note/ModalAddNote';
-import ModalUpdate from '../components/note/ModalUpdateNote';
+import { Card, Button, Modal, FileInput, FloatingLabel, Spinner, Dropdown } from "flowbite-react";
+import ModalAdd from '../../components/note/ModalAddNote';
+import ModalUpdate from '../../components/note/ModalUpdateNote';
 import toast from 'react-hot-toast';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FiDelete } from "react-icons/fi";
 import { FaRegEdit } from "react-icons/fa";
 import { RiImageAddFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
-import { convertTime } from '../lib/convertTime';
+import { convertTime } from '../../lib/convertTime';
 import { debounce } from 'lodash';
-import Pagination from '../components/note/Pagination';
-import { encrypt } from '../lib/encryptDecrypt';
+import Pagination from '../../components/note/Pagination';
+import { encrypt } from '../../lib/encryptDecrypt';
 
-const getAllNotes = async (query, setNotes) => {
-   if (query === undefined) {
-      query = ''
+const fetchNotes = async (search, sortBy, setNotes) => {
+   if (!search && !sortBy) {
+      search = ''
+      sortBy = 'updatedAt=desc'
    }
 
    try {
-      const res = await instance.get(`/notes?search=${query}`)
+      const res = await instance.get(`/notes?search=${search}&${sortBy}`)
       setNotes(res.data.data)
    } catch (error) {
       console.log(error);
    }
 }
-
-const deboucedGetNotes = debounce(getAllNotes, 500);
+const debouncedGetNotes = debounce(fetchNotes, 500)
 
 export default function Note() {
    const [notes, setNotes] = useState([])
@@ -41,15 +41,20 @@ export default function Note() {
    const [loading, setLoading] = useState(false);
    const [currentPage, setCurrentPage] = useState(1);
    const [loadingPage, setLoadingPage] = useState(true);
+   const [sortBy, setSortBy] = useState('');
+   const [dropdownSort, setDropdownSort] = useState('');
 
    const getNotes = useCallback(() => {
-      deboucedGetNotes(search, setNotes)
-   }, [search])
+      debouncedGetNotes(search, sortBy, setNotes)
+   }, [search, sortBy])
 
    useEffect(() => {
       getNotes()
-      setLoadingPage(false);
-   }, [search, getNotes])
+      sortLabel()
+      setTimeout(() => {
+         setLoadingPage(false);
+      }, 500)
+   }, [search, sortBy, getNotes])
 
    const handleDelete = async () => {
       try {
@@ -114,6 +119,18 @@ export default function Note() {
       setCurrentPage(page);
    };
 
+   const sortLabel = () => {
+      if (sortBy === 'createdAt=desc') {
+         setDropdownSort('Latest created')
+      } else if (sortBy === 'createdAt=asc') {
+         setDropdownSort('Oldest created')
+      } else if (sortBy === 'updatedAt=desc') {
+         setDropdownSort('Latest updated')
+      } else if (sortBy === 'updatedAt=asc') {
+         setDropdownSort('Oldest updated')
+      }
+   }
+
    const limit = 5;
    const totalPages = Math.ceil(notes.length / limit);
    const indexOfLastNote = currentPage * limit;
@@ -130,15 +147,31 @@ export default function Note() {
 
    return (
       <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
-         <div className='flex justify-center pt-5'>
-            <div className='flex mr-[60px] sm:mr-[255px]'>
-               <ModalAdd refetch={getNotes} />
-            </div>
-            <div>
-               <FloatingLabel variant="outlined" label="Search title" className='w-54' onChange={e => setSearch(e.target.value)} />
+         {/* <h1 className='text-2xl sm:text-3xl text-center py-5 text-black dark:text-white'>List notes</h1> */}
+         <div className='flex'>
+            <div className='flex mx-auto'>
+               <div className='flex w-[350px] sm:w-[550px] justify-between py-3 items-center'>
+                  <div className='flex flex-col sm:flex-row'>
+                     <div className='mr-2 mb-2 sm:mb-0'>
+                        <ModalAdd refetch={getNotes} />
+                     </div>
+                     <div className='mr-2'>
+                        <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
+                           <Dropdown.Item onClick={() => setSortBy()}>Sort</Dropdown.Item>
+                           <Dropdown.Divider />
+                           <Dropdown.Item onClick={() => setSortBy('createdAt=desc')}>Latest created</Dropdown.Item>
+                           <Dropdown.Item onClick={() => setSortBy('createdAt=asc')}>Oldest created</Dropdown.Item>
+                           <Dropdown.Item onClick={() => setSortBy('updatedAt=desc')}>Latest updated</Dropdown.Item>
+                           <Dropdown.Item onClick={() => setSortBy('updatedAt=asc')}>Oldest updated</Dropdown.Item>
+                        </Dropdown>
+                     </div>
+                  </div>
+                  <div>
+                     <FloatingLabel variant="outlined" label="Search title" className='w-54' onChange={e => setSearch(e.target.value)} />
+                  </div>
+               </div>
             </div>
          </div>
-         <h1 className='text-4xl text-center my-10 text-black dark:text-white'>List my notes</h1>
          <div className='flex justify-center'>
             <div className='flex flex-col'>
                {currentNotes.map(note => (
@@ -146,7 +179,7 @@ export default function Note() {
                      <div className='flex flex-row justify-between'>
                         <div>
                            <Link to={`/note/${encrypt(note.id)}`}>
-                              <h2 className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:dark:text-blue-500 hover:text-blue-400'>
+                              <h2 className='text-lg sm:text-2xl tracking-tight text-gray-900 dark:text-white hover:dark:text-blue-500 hover:text-blue-400 mr-2'>
                                  {note.title}
                               </h2>
                            </Link>

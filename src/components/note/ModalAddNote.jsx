@@ -1,4 +1,4 @@
-import { Button, Label, Modal, TextInput, Textarea, Select } from "flowbite-react";
+import { Button, Label, Modal, TextInput, Textarea, Select, FileInput, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import instance from "../../lib/instance";
 import toast from "react-hot-toast";
@@ -6,34 +6,44 @@ import PropTypes from 'prop-types';
 
 export default function AddNote({ refetch }) {
    const [openModal, setOpenModal] = useState(false);
+   const [categories, setCategories] = useState([]);
+   const [tags, setTags] = useState([]);
    const [title, setTitle] = useState('');
    const [content, setContent] = useState('');
-   const [tags, setTags] = useState([]);
-   const [categories, setCategories] = useState([]);
    const [category_id, setCategoryId] = useState('');
    const [tag_id, setTagId] = useState('');
+   const [file_path, setFilePath] = useState('');
+   const [image, setImage] = useState(null);
+   const [loading, setLoading] = useState(false);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+
+      setLoading(true);
 
       if (!title || !content) {
          return toast.error('Title and content cannot be empty');
       }
 
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('category_id', category_id);
+      formData.append('tag_id', tag_id);
+      formData.append('file_path', file_path);
+
       try {
-         await instance.post('/notes', {
-            title: title,
-            content: content,
-            category_id: category_id,
-            tag_id: tag_id
-         })
+         await instance.post('/notes', formData)
 
          setTitle('');
          setContent('');
+         setFilePath('');
+         setTagId('');
+         setCategoryId('');
+         setImage(null);
          setOpenModal(false);
-
+         setLoading(false);
          toast.success('Note created successfully');
-
          refetch();
       } catch (error) {
          console.log(error);
@@ -66,6 +76,11 @@ export default function AddNote({ refetch }) {
 
       getCategories()
    }, [])
+
+   const handleImage = (e) => {
+      setFilePath(e.target.files[0])
+      setImage(URL.createObjectURL(e.target.files[0]));
+   }
 
    const onCloseModal = () => {
       setOpenModal(false);
@@ -107,6 +122,15 @@ export default function AddNote({ refetch }) {
                      />
                   </div>
                   <div className="max-w-md">
+                     <h3 className="text-gray-900 dark:text-white">Add image</h3>
+                     <div>
+                        <FileInput id="file-upload-helper-text" onChange={handleImage} helperText="Format : PNG, JPEG and JPG." />
+                     </div>
+                     <div className="flex justify-center">
+                        {image && <img src={image} alt="image" width={200} />}
+                     </div>
+                  </div>
+                  <div className="max-w-md">
                      <div className="mb-2 block">
                         <Label htmlFor="category" value="Select category" />
                      </div>
@@ -129,7 +153,14 @@ export default function AddNote({ refetch }) {
                      </Select>
                   </div>
                   <div className="w-full">
-                     <Button onClick={handleSubmit} type='submit'>Save</Button>
+                     <Button onClick={handleSubmit} type='submit' >
+                        {loading ? (
+                           <div>
+                              <Spinner aria-label="Spinner button example" size="sm" />
+                              <span className="pl-3">Loading...</span>
+                           </div>
+                        ) : 'Save'}
+                     </Button>
                   </div>
                </div>
             </Modal.Body>

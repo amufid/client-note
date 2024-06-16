@@ -32,8 +32,8 @@ export default function AddTag({ refetch }) {
 
    return (
       <>
-         <div className="flex justify-center m-5">
-            <Button color='blue' size='lg' onClick={() => setOpenModal(true)}>+ Add tag</Button>
+         <div className="flex justify-center mb-5">
+            <Button color='blue' size='md' onClick={() => setOpenModal(true)}>+ Add tag</Button>
          </div>
          <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
             <Modal.Header />

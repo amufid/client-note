@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Flowbite, Navbar, Avatar, Dropdown, DarkThemeToggle } from "flowbite-react";
+import { Flowbite, Navbar, Dropdown, DarkThemeToggle } from "flowbite-react";
 import Cookies from "js-cookie";
 import { useAuth } from "../provider/authProvider";
 import instance from "../lib/instance";
+import Person from "./icon/Person";
 
 export default function Component() {
   const [user, setUser] = useState('');
@@ -35,7 +36,9 @@ export default function Component() {
               arrowIcon={false}
               inline
               className="z-20"
-              label={<Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded />}>
+              label={<Person />}
+            // label={<Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded />}
+            >
               <Dropdown.Header>
                 <span className="block text-sm">{user.username}</span>
                 <span className="block truncate text-sm font-medium">{user.email}</span>

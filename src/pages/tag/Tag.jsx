@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import instance from '../lib/instance'
+import instance from '../../lib/instance'
 import { Table, Button, Label, Modal, TextInput } from "flowbite-react";
 import toast from 'react-hot-toast';
-import ModalAddTag from '../components/tag/ModalAddTag';
+import ModalAddTag from '../../components/tag/ModalAddTag';
 import { FiDelete } from "react-icons/fi";
 import { FaRegEdit } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from 'react-router-dom';
-import { encrypt } from '../lib/encryptDecrypt';
+import { encrypt } from '../../lib/encryptDecrypt';
 
 export default function Tag() {
    const [tags, setTags] = useState([]);

@@ -41,8 +41,8 @@ export default function AddCategory({ refetch }) {
 
    return (
       <>
-         <div className="flex justify-center m-5">
-            <Button color='blue' size='xl' onClick={() => setOpenModal(true)}>+ Add Category</Button>
+         <div className="flex justify-center mb-5">
+            <Button color='blue' size='md' onClick={() => setOpenModal(true)}>+ Add Category</Button>
          </div>
          <Modal show={openModal} size="md" onClose={onCloseModal} popup>
             <Modal.Header />

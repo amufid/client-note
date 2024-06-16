@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import instance from "../lib/instance";
+import instance from "../../lib/instance";
 import { useParams } from "react-router-dom";
-import { convertTime } from "../lib/convertTime";
+import { convertTime } from "../../lib/convertTime";
 import { Card } from "flowbite-react";
 import { Link } from "react-router-dom";
-import { decrypt } from "../lib/encryptDecrypt";
-import { encrypt } from "../lib/encryptDecrypt";
+import { decrypt } from "../../lib/encryptDecrypt";
+import { encrypt } from "../../lib/encryptDecrypt";
 
 export default function DetailCategory() {
    const [category, setCategory] = useState([])
