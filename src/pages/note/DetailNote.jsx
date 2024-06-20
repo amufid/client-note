@@ -54,17 +54,6 @@ export default function DetailNote() {
                         </div>
                      ))}
                   </div>
-                  {/* {images[0] ? (
-                     <div className='flex justify-center'>
-                        <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 w-[300px] sm:w-[650px] rounded-sm bg-gray-300 dark:bg-gray-900 border-gray-400">
-                           <Carousel slide={false}>
-                              {images.map((image) => (
-                                 <img key={image} src={image} alt="image" className='w-full px-12' />
-                              ))}
-                           </Carousel>
-                        </div>
-                     </div>
-                  ) : null} */}
                   {images[0] ? (
                      <div className='flex justify-center'>
                         <div className="h-auto w-[300px] sm:w-[530px] rounded-sm">
