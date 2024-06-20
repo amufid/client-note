@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Button } from 'flowbite-react';
 
-const Pagination = ({ currentPage, onPageChange, totalPages }) => {
+const Pagination = ({ currentPage, totalPages, onPageChangePrev, onPageChangeNext }) => {
    const generatePagination = () => {
       const pageNumbers = [];
       const maxPageNumbersToShow = 5;
@@ -48,11 +48,11 @@ const Pagination = ({ currentPage, onPageChange, totalPages }) => {
 
    return (
       <div className="flex justify-center items-center py-5">
-         {totalPages === 1 ? null :
+         {totalPages <= 1 ? null :
             <Button
                color='gray'
                className='mr-1'
-               onClick={() => onPageChange(currentPage - 1)}
+               onClick={() => onPageChangePrev(currentPage - 1)}
                disabled={currentPage === 1}
             >
                Prev
@@ -63,17 +63,17 @@ const Pagination = ({ currentPage, onPageChange, totalPages }) => {
                color={`${currentPage === page ? 'purple' : 'gray'}`}
                className='mr-1'
                key={index}
-               onClick={() => page !== '...' && onPageChange(page)}
+               onClick={() => page !== '...' && onPageChangeNext(page)}
                disabled={page === '...'}
             >
                {page}
             </Button>
          ))}
-         {totalPages === 1 ? null :
+         {totalPages <= 1 ? null :
             <Button
                color='gray'
                className='mr-1'
-               onClick={() => onPageChange(currentPage + 1)}
+               onClick={() => onPageChangeNext(currentPage + 1)}
                disabled={currentPage === totalPages}
             >
                Next
@@ -88,5 +88,6 @@ export default Pagination;
 Pagination.propTypes = {
    currentPage: PropTypes.number,
    totalPages: PropTypes.number,
-   onPageChange: PropTypes.func,
+   onPageChangeNext: PropTypes.func,
+   onPageChangePrev: PropTypes.func,
 }

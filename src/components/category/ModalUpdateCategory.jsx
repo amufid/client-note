@@ -1,46 +1,44 @@
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
+import { FaRegEdit } from "react-icons/fa";
 import { useState } from "react";
 import instance from "../../lib/instance";
 import toast from "react-hot-toast";
 import PropTypes from 'prop-types';
 
-export default function AddCategory({ refetch }) {
+ModalUpdateCategory.propTypes = {
+   category: PropTypes.object,
+   refetch: PropTypes.func
+}
+
+export default function ModalUpdateCategory({ category, refetch }) {
+   const [name, setName] = useState(category.name);
+   const [description, setDescription] = useState(category.description);
    const [modal, setModal] = useState(false);
-   const [name, setName] = useState('');
-   const [description, setDescription] = useState('');
    const [loading, setLoading] = useState(false);
 
-   const handleSubmit = async (e) => {
+   const handleUpdate = async (e) => {
       e.preventDefault();
-
-      if (!name) {
-         return toast.error('Name cannot be empty');
-      }
 
       setLoading(true);
 
       try {
-         await instance.post('/categories', {
+         await instance.put(`/categories/${category.id}`, {
             name: name,
             description: description
          })
 
-         setName('');
-         setDescription('');
-         setLoading(false);
          setModal(false);
-         toast.success('Category created successfully');
+         setLoading(false);
+         toast.success('Category updated successfully');
          refetch();
       } catch (error) {
          console.log(error);
-         toast.error(error.response.data.message);
       }
    }
-
    return (
       <>
-         <div className="flex justify-center mb-5">
-            <Button color='blue' size='md' onClick={() => setModal(true)}>+ Add Category</Button>
+         <div className="flex justify-center">
+            <Button color='blue' size='sm' onClick={() => setModal(true)}><FaRegEdit /></Button>
          </div>
          <Modal show={modal} size="md" onClose={() => setModal(false)} popup>
             <Modal.Header />
@@ -54,6 +52,7 @@ export default function AddCategory({ refetch }) {
                      <TextInput
                         name="name"
                         placeholder="Nama"
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
                      />
@@ -66,6 +65,7 @@ export default function AddCategory({ refetch }) {
                         type="text"
                         placeholder="Deskripsi"
                         rows={4}
+                        value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
                      />
@@ -74,7 +74,7 @@ export default function AddCategory({ refetch }) {
                      {loading ? (
                         <Button>Saving...</Button>
                      ) : (
-                        <Button onClick={handleSubmit} type='submit'>Save</Button>
+                        <Button onClick={handleUpdate} type='submit'>Save</Button>
                      )}
                   </div>
                </div>
@@ -82,8 +82,4 @@ export default function AddCategory({ refetch }) {
          </Modal>
       </>
    )
-}
-
-AddCategory.propTypes = {
-   refetch: PropTypes.func
 }

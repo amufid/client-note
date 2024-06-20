@@ -1,23 +1,20 @@
 import instance from '../../lib/instance'
 import { useState, useEffect, useCallback } from 'react'
-import { Card, Button, Modal, FileInput, FloatingLabel, Spinner, Dropdown } from "flowbite-react";
-import ModalAdd from '../../components/note/ModalAddNote';
-import ModalUpdate from '../../components/note/ModalUpdateNote';
-import toast from 'react-hot-toast';
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { FiDelete } from "react-icons/fi";
-import { FaRegEdit } from "react-icons/fa";
-import { RiImageAddFill } from "react-icons/ri";
+import { Card, FloatingLabel, Spinner, Dropdown } from "flowbite-react";
 import { Link } from 'react-router-dom';
 import { convertTime } from '../../lib/convertTime';
 import { debounce } from 'lodash';
 import Pagination from '../../components/note/Pagination';
 import { encrypt } from '../../lib/encryptDecrypt';
+import ModalAdd from '../../components/note/ModalAddNote';
+import ModalUpdateNote from '../../components/note/ModalUpdateNote';
+import ModalDeleteNote from '../../components/note/ModalDeleteNote';
+import ModalAddImage from '../../components/note/ModalAddImage';
 
 const fetchNotes = async (search, sortBy, setNotes) => {
    if (!search && !sortBy) {
       search = ''
-      sortBy = 'updatedAt=desc'
+      sortBy = 'createdAt=desc'
    }
 
    try {
@@ -27,18 +24,12 @@ const fetchNotes = async (search, sortBy, setNotes) => {
       console.log(error);
    }
 }
+
 const debouncedGetNotes = debounce(fetchNotes, 500)
 
 export default function Note() {
    const [notes, setNotes] = useState([])
-   const [noteId, setNoteId] = useState('')
-   const [openModal, setOpenModal] = useState(false);
-   const [modalDelete, setModalDelete] = useState(false);
-   const [modalImage, setModalImage] = useState(false);
-   const [image, setImage] = useState();
-   const [file, setFile] = useState();
    const [search, setSearch] = useState('');
-   const [loading, setLoading] = useState(false);
    const [currentPage, setCurrentPage] = useState(1);
    const [loadingPage, setLoadingPage] = useState(true);
    const [sortBy, setSortBy] = useState('');
@@ -48,78 +39,7 @@ export default function Note() {
       debouncedGetNotes(search, sortBy, setNotes)
    }, [search, sortBy])
 
-   useEffect(() => {
-      getNotes()
-      sortLabel()
-      setTimeout(() => {
-         setLoadingPage(false);
-      }, 500)
-   }, [search, sortBy, getNotes])
-
-   const handleDelete = async () => {
-      try {
-         await instance.delete(`/notes/${noteId}`)
-
-         toast.success('Note deleted successfully')
-         setModalDelete(false);
-         getNotes();
-      } catch (error) {
-         console.log(error);
-         toast.error('Failed to delete note')
-      }
-   }
-
-   const handleUpload = async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData();
-      formData.append('file_path', image);
-      formData.append('note_id', noteId);
-
-      setLoading(true)
-
-      try {
-         await instance.post('/attachments', formData, {
-            headers: {
-               'Content-Type': 'multipart/form-data'
-            }
-         })
-
-         setModalImage(false);
-         setLoading(false);
-
-         getNotes();
-         toast.success('Image added successfully')
-      } catch (error) {
-         console.log(error);
-      }
-   }
-
-   const handleImage = (e) => {
-      setImage(e.target.files[0])
-      setFile(URL.createObjectURL(e.target.files[0]));
-   }
-
-   const getId = (e) => {
-      setNoteId(e);
-      setOpenModal(true)
-   }
-
-   const getIdImage = (e) => {
-      setNoteId(e);
-      setModalImage(true)
-   }
-
-   const getIdDelete = (e) => {
-      setNoteId(e);
-      setModalDelete(true)
-   }
-
-   const handlePageChange = (page) => {
-      setCurrentPage(page);
-   };
-
-   const sortLabel = () => {
+   const sortLabel = useCallback(() => {
       if (sortBy === 'createdAt=desc') {
          setDropdownSort('Latest created')
       } else if (sortBy === 'createdAt=asc') {
@@ -129,7 +49,24 @@ export default function Note() {
       } else if (sortBy === 'updatedAt=asc') {
          setDropdownSort('Oldest updated')
       }
-   }
+   }, [sortBy])
+
+   useEffect(() => {
+      getNotes()
+      sortLabel()
+      setTimeout(() => {
+         setLoadingPage(false);
+      }, 500)
+   }, [search, sortBy, getNotes, sortLabel])
+
+   const handlePageChangePrev = (page) => {
+      setCurrentPage(page);
+   };
+
+   const handlePageChangeNext = (page) => {
+      setCurrentPage(page);
+      window.scrollTo(0, 0);
+   };
 
    const limit = 5;
    const totalPages = Math.ceil(notes.length / limit);
@@ -147,7 +84,6 @@ export default function Note() {
 
    return (
       <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
-         {/* <h1 className='text-2xl sm:text-3xl text-center py-5 text-black dark:text-white'>List notes</h1> */}
          <div className='flex'>
             <div className='flex mx-auto'>
                <div className='flex w-[350px] sm:w-[550px] justify-between py-3 items-center'>
@@ -186,70 +122,13 @@ export default function Note() {
                         </div>
                         <div className='flex flex-row'>
                            <div className='mr-2'>
-                              <Button value={note.id} onClick={() => getIdImage(note.id)}><RiImageAddFill /></Button>
-                              <Modal show={modalImage} size="md" onClose={() => setModalImage(false)} popup>
-                                 <Modal.Header />
-                                 <Modal.Body>
-                                    <div className="space-y-6">
-                                       <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add image</h3>
-                                       <div>
-                                          <FileInput id="file-upload-helper-text" onChange={handleImage} helperText="Format : JPEG, PNG and JPG." />
-                                       </div>
-                                       <div className="flex justify-center">
-                                          {file && <img src={file} alt="image" width={200} />}
-                                       </div>
-                                       <div className="w-full">
-                                          <Button onClick={handleUpload} type='submit' >
-                                             {loading ? (
-                                                <div>
-                                                   <Spinner aria-label="Spinner button example" size="sm" />
-                                                   <span className="pl-3">Loading...</span>
-                                                </div>
-                                             ) : 'Save'}
-                                          </Button>
-                                       </div>
-                                    </div>
-                                 </Modal.Body>
-                              </Modal>
+                              <ModalAddImage note={note} refetch={getNotes} />
                            </div>
                            <div className='mr-2'>
-                              <Button color='green' value={note.id} onClick={() => getId(note.id)}>
-                                 <FaRegEdit />
-                              </Button>
-                              {openModal &&
-                                 <ModalUpdate
-                                    noteId={noteId}
-                                    onCloseModal={() => setOpenModal(false)}
-                                    openModal={openModal}
-                                    refetch={getNotes}
-                                 />}
+                              <ModalUpdateNote note={note} refetch={getNotes} />
                            </div>
                            <div>
-                              <Button color='red' value={note.id} onClick={() => getIdDelete(note.id)}>
-                                 <FiDelete />
-                              </Button>
-                              <Modal show={modalDelete} size="md"
-                                 onClose={() => setModalDelete(false)} popup>
-                                 <Modal.Header />
-                                 <Modal.Body>
-                                    <div className="text-center">
-                                       <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-                                       <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                                          Are you sure you want to delete this note?
-                                       </h3>
-                                       <div className="flex justify-center gap-4">
-                                          <Button color="failure"
-                                             onClick={() => handleDelete()}>
-                                             {"Yes, I'm sure"}
-                                          </Button>
-                                          <Button color="gray"
-                                             onClick={() => setModalDelete(false)}>
-                                             No, cancel
-                                          </Button>
-                                       </div>
-                                    </div>
-                                 </Modal.Body>
-                              </Modal>
+                              <ModalDeleteNote note={note} refetch={getNotes} />
                            </div>
                         </div>
                      </div>
@@ -292,7 +171,7 @@ export default function Note() {
             </div>
          </div>
          <div className='flex justify-center py-7'>
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChangeNext={handlePageChangeNext} onPageChangePrev={handlePageChangePrev} />
          </div>
       </div>
    )
