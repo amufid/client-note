@@ -19,8 +19,6 @@ export default function AddNote({ refetch }) {
    const handleSubmit = async (e) => {
       e.preventDefault();
 
-      setLoading(true);
-
       if (!title || !content) {
          return toast.error('Title and content cannot be empty');
       }
@@ -31,6 +29,8 @@ export default function AddNote({ refetch }) {
       formData.append('category_id', category_id);
       formData.append('tag_id', tag_id);
       formData.append('file_path', file_path);
+
+      setLoading(true);
 
       try {
          await instance.post('/notes', formData)
@@ -153,14 +153,18 @@ export default function AddNote({ refetch }) {
                      </Select>
                   </div>
                   <div className="w-full">
-                     <Button onClick={handleSubmit} type='submit' >
-                        {loading ? (
+                     {loading ? (
+                        <Button>
                            <div>
                               <Spinner aria-label="Spinner button example" size="sm" />
-                              <span className="pl-3">Loading...</span>
+                              <span className="pl-3">Saving...</span>
                            </div>
-                        ) : 'Save'}
-                     </Button>
+                        </Button>
+                     ) : (
+                        <Button onClick={handleSubmit} type='submit' >
+                           Save
+                        </Button>
+                     )}
                   </div>
                </div>
             </Modal.Body>

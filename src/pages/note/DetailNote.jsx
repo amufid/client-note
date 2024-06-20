@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import instance from '../../lib/instance'
-import { Carousel, Button } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import { convertTime } from '../../lib/convertTime';
 import { decrypt } from '../../lib/encryptDecrypt';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 export default function DetailNote() {
    const [note, setNote] = useState({})
@@ -54,10 +56,12 @@ export default function DetailNote() {
                   </div>
                   {images[0] ? (
                      <div className='flex justify-center'>
-                        <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 w-[300px] sm:w-[650px] rounded-sm bg-gray-300 dark:bg-gray-700 border-gray-400">
-                           <Carousel slide={false}>
-                              {images.map((image) => (
-                                 <img key={image} src={image} alt="image" className='w-[220px] sm:w-[400px]' />
+                        <div className="h-auto w-[300px] sm:w-[530px] rounded-sm">
+                           <Carousel useKeyboardArrows={true} showThumbs={false}>
+                              {images.map((image, index) => (
+                                 <div className="slide" key={index}>
+                                    <img src={image} alt="image" className='h-[300px] sm:h-[400px] px-2' />
+                                 </div>
                               ))}
                            </Carousel>
                         </div>

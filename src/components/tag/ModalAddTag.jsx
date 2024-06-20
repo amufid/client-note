@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 export default function AddTag({ refetch }) {
    const [openModal, setOpenModal] = useState(false);
    const [name, setName] = useState('');
+   const [loading, setLoading] = useState(false);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -15,14 +16,15 @@ export default function AddTag({ refetch }) {
          return toast.error('Name cannot be empty');
       }
 
+      setLoading(true);
+
       try {
          await instance.post('/tags', { name: name })
 
          setName('');
          setOpenModal(false);
-
+         setLoading(false);
          toast.success('Tag created successfully');
-
          refetch();
       } catch (error) {
          console.log(error);
@@ -52,7 +54,11 @@ export default function AddTag({ refetch }) {
                      />
                   </div>
                   <div className="w-full">
-                     <Button onClick={handleSubmit} type='submit'>Save</Button>
+                     {loading ? (
+                        <Button>Saving...</Button>
+                     ) : (
+                        <Button onClick={handleSubmit} type='submit'>Save</Button>
+                     )}
                   </div>
                </div>
             </Modal.Body>
