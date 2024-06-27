@@ -11,6 +11,7 @@ import Profile from "../pages/EditProfile.jsx";
 import DetailCategory from "../pages/category/DetailCategory.jsx";
 import DetailTag from "../pages/tag/DetailTag.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
+import Confirm from "../pages/auth/Confirm.jsx";
 
 const Routes = () => {
    const { accessToken } = useAuth();
@@ -27,6 +28,10 @@ const Routes = () => {
       {
          path: '/register',
          element: <Register />,
+      },
+      {
+         path: '/google-auth',
+         element: <Confirm />,
       },
       {
          path: '/*',

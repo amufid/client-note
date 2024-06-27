@@ -57,7 +57,7 @@ export default function Note() {
       setTimeout(() => {
          setLoadingPage(false);
       }, 500)
-   }, [search, sortBy, getNotes, sortLabel])
+   }, [getNotes, sortLabel])
 
    const handlePageChangePrev = (page) => {
       setCurrentPage(page);
@@ -89,7 +89,7 @@ export default function Note() {
                <div className='flex w-[350px] sm:w-[550px] justify-between py-3 items-center'>
                   <div className='flex flex-col sm:flex-row'>
                      <div className='mr-2 mb-2 sm:mb-0'>
-                        <ModalAdd refetch={getNotes} />
+                        <ModalAdd refetch={getNotes} data={notes} />
                      </div>
                      <div className='mr-2'>
                         <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
