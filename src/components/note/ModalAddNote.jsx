@@ -4,7 +4,7 @@ import instance from "../../lib/instance";
 import toast from "react-hot-toast";
 import PropTypes from 'prop-types';
 
-export default function AddNote({ refetch }) {
+export default function AddNote({ refetch, data }) {
    const [openModal, setOpenModal] = useState(false);
    const [categories, setCategories] = useState([]);
    const [tags, setTags] = useState([]);
@@ -121,15 +121,17 @@ export default function AddNote({ refetch }) {
                         required
                      />
                   </div>
-                  <div className="max-w-md">
-                     <h3 className="text-gray-900 dark:text-white">Add image</h3>
-                     <div>
-                        <FileInput id="file-upload-helper-text" onChange={handleImage} helperText="Format : PNG, JPEG and JPG." />
+                  {data.length >= 1 && (
+                     <div className="max-w-md">
+                        <h3 className="text-gray-900 dark:text-white">Add image</h3>
+                        <div>
+                           <FileInput id="file-upload-helper-text" onChange={handleImage} helperText="Format : PNG, JPEG and JPG." />
+                        </div>
+                        <div className="flex justify-center">
+                           {image && <img src={image} alt="image" width={200} />}
+                        </div>
                      </div>
-                     <div className="flex justify-center">
-                        {image && <img src={image} alt="image" width={200} />}
-                     </div>
-                  </div>
+                  )}
                   <div className="max-w-md">
                      <div className="mb-2 block">
                         <Label htmlFor="category" value="Select category" />
@@ -174,5 +176,6 @@ export default function AddNote({ refetch }) {
 }
 
 AddNote.propTypes = {
-   refetch: PropTypes.func
+   refetch: PropTypes.func,
+   data: PropTypes.array
 }
