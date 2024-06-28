@@ -61,7 +61,7 @@ export default function Profile() {
                <form className="flex max-w-md flex-col gap-3 w-[350px] sm:w-96 p-7" onSubmit={handleUpdate}>
                   <div>
                      <div className="mb-2 block">
-                        <Label htmlFor="Username" value="User name" />
+                        <Label htmlFor="Username" value="Username" />
                      </div>
                      <TextInput
                         id="username"
@@ -74,7 +74,7 @@ export default function Profile() {
                   </div>
                   <div>
                      <div className="mb-2 block">
-                        <Label htmlFor="email" value="Your email" />
+                        <Label htmlFor="email" value="Email" />
                      </div>
                      <TextInput
                         id="email"
@@ -87,7 +87,7 @@ export default function Profile() {
                   </div>
                   <div>
                      <div className="mb-2 block">
-                        <Label htmlFor="password" value="Your password" />
+                        <Label htmlFor="password" value="Password" />
                      </div>
                      <TextInput
                         id="password"

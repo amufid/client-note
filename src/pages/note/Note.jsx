@@ -135,13 +135,15 @@ export default function Note() {
                      <p className='font-normal text-gray-700 dark:text-gray-400'>
                         {note.content}
                      </p>
-                     <div className='grid grid-cols-3 justify-center items-center'>
-                        {note.attachment.map((note) => (
-                           <div key={note.id} className='m-1'>
-                              <img src={note.file_path} alt="image" className='w-[150px] h-auto mb-2' />
-                           </div>
-                        ))}
-                     </div>
+                     <Link to={`/note/${encrypt(note.id)}`}>
+                        <div className='grid grid-cols-3 justify-center items-center'>
+                           {note.attachment.map((note) => (
+                              <div key={note.id} className='m-1'>
+                                 <img src={note.file_path} alt="image" className='w-[150px] h-auto mb-2' />
+                              </div>
+                           ))}
+                        </div>
+                     </Link>
                      <div className='flex flex-row justify-between'>
                         <div className='mr-2'>
                            <p className='font-normal text-gray-700 dark:text-gray-400'>Written on : </p>
@@ -171,7 +173,12 @@ export default function Note() {
             </div>
          </div>
          <div className='flex justify-center py-7'>
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChangeNext={handlePageChangeNext} onPageChangePrev={handlePageChangePrev} />
+            <Pagination
+               currentPage={currentPage}
+               totalPages={totalPages}
+               onPageChangeNext={handlePageChangeNext}
+               onPageChangePrev={handlePageChangePrev}
+            />
          </div>
       </div>
    )
