@@ -47,39 +47,39 @@ const Pagination = ({ currentPage, totalPages, onPageChangePrev, onPageChangeNex
    const pages = generatePagination();
 
    return (
-      <div className="flex justify-center items-center py-5">
-         {totalPages <= 1 ? null :
-            <Button
-               color='gray'
-               className='mr-1'
-               onClick={() => onPageChangePrev(currentPage - 1)}
-               disabled={currentPage === 1}
-            >
-               Prev
-            </Button>
-         }
-         {pages.map((page, index) => (
-            <Button
-               color={`${currentPage === page ? 'purple' : 'gray'}`}
-               className='mr-1'
-               key={index}
-               onClick={() => page !== '...' && onPageChangeNext(page)}
-               disabled={page === '...'}
-            >
-               {page}
-            </Button>
-         ))}
-         {totalPages <= 1 ? null :
-            <Button
-               color='gray'
-               className='mr-1'
-               onClick={() => onPageChangeNext(currentPage + 1)}
-               disabled={currentPage === totalPages}
-            >
-               Next
-            </Button>
-         }
-      </div>
+      <>
+         {totalPages === 1 ? null : (
+            <div className="flex justify-center items-center py-5">
+               <Button
+                  color='gray'
+                  className='mr-1'
+                  onClick={() => onPageChangePrev(currentPage - 1)}
+                  disabled={currentPage === 1}
+               >
+                  Prev
+               </Button>
+               {pages.map((page, index) => (
+                  <Button
+                     color={`${currentPage === page ? 'purple' : 'gray'}`}
+                     className='mr-1 hidden sm:flex'
+                     key={index}
+                     onClick={() => page !== '...' && onPageChangeNext(page)}
+                     disabled={page === '...'}
+                  >
+                     {page}
+                  </Button>
+               ))}
+               <Button
+                  color='gray'
+                  className='mr-1'
+                  onClick={() => onPageChangeNext(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+               >
+                  Next
+               </Button>
+            </div>
+         )}
+      </>
    )
 }
 

@@ -37,11 +37,12 @@ export default function ModalAddImage({ note, refetch }) {
          })
 
          setModal(false);
-         setLoading(false);
          toast.success('Image added successfully')
          refetch();
       } catch (error) {
-         console.log(error);
+         toast.error('Something went wrong')
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -52,7 +53,9 @@ export default function ModalAddImage({ note, refetch }) {
 
    return (
       <>
-         <Button value={note.id} onClick={() => setModal(true)}><RiImageAddFill /></Button>
+         <Button color='green' value={note.id} onClick={() => setModal(true)} className="w-10 h-10 mr-2 flex items-center">
+            <RiImageAddFill />
+         </Button>
          <Modal show={modal} size="md" onClose={() => setModal(false)} popup>
             <Modal.Header />
             <Modal.Body>
@@ -66,7 +69,7 @@ export default function ModalAddImage({ note, refetch }) {
                   </div>
                   <div className="w-full">
                      {loading ? (
-                        <Button>
+                        <Button disabled>
                            <div>
                               <Spinner aria-label="Spinner button example" size="sm" />
                               <span className="pl-3">Saving...</span>

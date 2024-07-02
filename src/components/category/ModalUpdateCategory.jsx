@@ -2,7 +2,7 @@ import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { FaRegEdit } from "react-icons/fa";
 import { useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import PropTypes from 'prop-types';
 
 ModalUpdateCategory.propTypes = {
@@ -28,11 +28,12 @@ export default function ModalUpdateCategory({ category, refetch }) {
          })
 
          setModal(false);
-         setLoading(false);
          toast.success('Category updated successfully');
          refetch();
       } catch (error) {
-         console.log(error);
+         toast.error('Something went wrong');
+      } finally {
+         setLoading(false);
       }
    }
    return (
@@ -72,7 +73,7 @@ export default function ModalUpdateCategory({ category, refetch }) {
                   </div>
                   <div className="w-full">
                      {loading ? (
-                        <Button>Saving...</Button>
+                        <Button disabled>Saving...</Button>
                      ) : (
                         <Button onClick={handleUpdate} type='submit'>Save</Button>
                      )}

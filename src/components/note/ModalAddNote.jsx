@@ -1,7 +1,7 @@
 import { Button, Label, Modal, TextInput, Textarea, Select, FileInput, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import PropTypes from 'prop-types';
 
 export default function AddNote({ refetch }) {
@@ -34,7 +34,6 @@ export default function AddNote({ refetch }) {
 
       try {
          await instance.post('/notes', formData)
-
          setTitle('');
          setContent('');
          setFilePath('');
@@ -42,12 +41,12 @@ export default function AddNote({ refetch }) {
          setCategoryId('');
          setImage(null);
          setOpenModal(false);
-         setLoading(false);
          toast.success('Note created successfully');
          refetch();
       } catch (error) {
-         console.log(error);
-         toast.error(error.response.data.message);
+         toast.error('Something went wrong');
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -154,7 +153,7 @@ export default function AddNote({ refetch }) {
                   </div>
                   <div className="w-full">
                      {loading ? (
-                        <Button>
+                        <Button disabled>
                            <div>
                               <Spinner aria-label="Spinner button example" size="sm" />
                               <span className="pl-3">Saving...</span>
@@ -174,5 +173,5 @@ export default function AddNote({ refetch }) {
 }
 
 AddNote.propTypes = {
-   refetch: PropTypes.func
+   refetch: PropTypes.func,
 }

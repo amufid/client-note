@@ -1,7 +1,7 @@
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import PropTypes from 'prop-types';
 
 export default function AddCategory({ refetch }) {
@@ -27,13 +27,13 @@ export default function AddCategory({ refetch }) {
 
          setName('');
          setDescription('');
-         setLoading(false);
          setModal(false);
          toast.success('Category created successfully');
          refetch();
       } catch (error) {
-         console.log(error);
-         toast.error(error.response.data.message);
+         toast.error('Something went wrong');
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -72,7 +72,7 @@ export default function AddCategory({ refetch }) {
                   </div>
                   <div className="w-full">
                      {loading ? (
-                        <Button>Saving...</Button>
+                        <Button disabled>Saving...</Button>
                      ) : (
                         <Button onClick={handleSubmit} type='submit'>Save</Button>
                      )}

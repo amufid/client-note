@@ -37,7 +37,11 @@ export default function Category() {
                <Table.Body className="divide-y">
                   {categories.map((category) => (
                      <Table.Row key={category.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <Table.Cell><Link to={`/category/${encrypt(category.id)}`} className="hover:underline hover:text-blue-400">{category.name}</Link></Table.Cell>
+                        <Table.Cell>
+                           <Link to={`/category/${encrypt(category.id)}`} className="hover:underline hover:text-blue-400">
+                              {category.name}
+                           </Link>
+                        </Table.Cell>
                         <Table.Cell>{category.description}</Table.Cell>
                         <Table.Cell>
                            <div className="flex flex-col sm:flex-row">

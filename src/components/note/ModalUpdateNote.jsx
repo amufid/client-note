@@ -1,9 +1,9 @@
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
 import PropTypes from 'prop-types';
 import { FaRegEdit } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function ModalUpdate({ note, refetch }) {
    const [title, setTitle] = useState(note.title);
@@ -15,7 +15,7 @@ export default function ModalUpdate({ note, refetch }) {
       e.preventDefault();
 
       if (!title || !content) {
-         return toast.error('Title and content cannot be empty');
+         return toast.error('Title and content cannot be empty!');
       }
 
       setLoading(true);
@@ -25,14 +25,13 @@ export default function ModalUpdate({ note, refetch }) {
             title: title,
             content: content
          })
-
-         setLoading(false);
          setModal(false);
          toast.success('Updated successfully');
          refetch();
       } catch (error) {
-         console.log(error);
-         toast.error(error.response.data.message);
+         toast.error('Something went wrong!');
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -42,7 +41,7 @@ export default function ModalUpdate({ note, refetch }) {
 
    return (
       <>
-         <Button color='green' onClick={handleModal}>
+         <Button color='blue' onClick={handleModal} className="w-10 h-10 mr-2 flex items-center">
             <FaRegEdit />
          </Button>
          <Modal show={modal} size="md" onClose={handleModal} popup>
@@ -79,7 +78,7 @@ export default function ModalUpdate({ note, refetch }) {
                   </div>
                   {loading ? (
                      <div className="w-full">
-                        <Button>Saving...</Button>
+                        <Button disabled>Saving...</Button>
                      </div>
                   ) : (
                      <div className="w-full">
@@ -95,5 +94,5 @@ export default function ModalUpdate({ note, refetch }) {
 
 ModalUpdate.propTypes = {
    note: PropTypes.object,
-   refetch: PropTypes.func
+   refetch: PropTypes.func,
 }

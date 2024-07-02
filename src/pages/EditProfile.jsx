@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import instance from '../lib/instance';
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
@@ -45,11 +45,12 @@ export default function Profile() {
             email: email,
             password: password,
          })
-         toast.success('Update successfully');
-         getUser();
-         navigate('/note');
+         toast.success('Update profile successfully');
+         setTimeout(() => {
+            navigate('/note');
+         }, 1000)
       } catch (error) {
-         console.log(error);
+         toast.error('Something wen wrong');
       }
    }
 
@@ -61,7 +62,7 @@ export default function Profile() {
                <form className="flex max-w-md flex-col gap-3 w-[350px] sm:w-96 p-7" onSubmit={handleUpdate}>
                   <div>
                      <div className="mb-2 block">
-                        <Label htmlFor="Username" value="User name" />
+                        <Label htmlFor="Username" value="Username" />
                      </div>
                      <TextInput
                         id="username"
@@ -74,7 +75,7 @@ export default function Profile() {
                   </div>
                   <div>
                      <div className="mb-2 block">
-                        <Label htmlFor="email" value="Your email" />
+                        <Label htmlFor="email" value="Email" />
                      </div>
                      <TextInput
                         id="email"
@@ -87,7 +88,7 @@ export default function Profile() {
                   </div>
                   <div>
                      <div className="mb-2 block">
-                        <Label htmlFor="password" value="Your password" />
+                        <Label htmlFor="password" value="Password" />
                      </div>
                      <TextInput
                         id="password"
