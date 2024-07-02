@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FiDelete } from "react-icons/fi";
 import { useState } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { Button, Modal } from "flowbite-react";
 
 ModalDeleteNote.propTypes = {
@@ -31,7 +31,7 @@ export default function ModalDeleteNote({ note, refetch }) {
 
    return (
       <>
-         <Button color='red' onClick={() => handleModal()}>
+         <Button color='red' onClick={() => handleModal()} className="w-10 h-10 mr-2 flex items-center">
             <FiDelete />
          </Button>
          <Modal show={modal} size="md"

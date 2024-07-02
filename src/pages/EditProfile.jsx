@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import instance from '../lib/instance';
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
@@ -45,11 +45,12 @@ export default function Profile() {
             email: email,
             password: password,
          })
-         toast.success('Update successfully');
-         getUser();
-         navigate('/note');
+         toast.success('Update profile successfully');
+         setTimeout(() => {
+            navigate('/note');
+         }, 1000)
       } catch (error) {
-         console.log(error);
+         toast.error('Something wen wrong');
       }
    }
 

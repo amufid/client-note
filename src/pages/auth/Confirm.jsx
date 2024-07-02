@@ -14,9 +14,9 @@ export default function Confirm() {
          setToken(token)
          Cookies.set('accessToken', getToken)
          window.history.pushState(null, '', '/note');
-         setTimeout(() => {
+         if (Cookies.get('accessToken')) {
             window.location.reload();
-         }, 1000)
+         }
       }
    }, [location.search, getToken])
 

@@ -1,7 +1,7 @@
 import { Button, Label, Modal, TextInput } from "flowbite-react";
 import { useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import PropTypes from 'prop-types';
 
 export default function AddTag({ refetch }) {
@@ -20,15 +20,14 @@ export default function AddTag({ refetch }) {
 
       try {
          await instance.post('/tags', { name: name })
-
          setName('');
          setOpenModal(false);
-         setLoading(false);
          toast.success('Tag created successfully');
          refetch();
       } catch (error) {
-         console.log(error);
-         toast.error(error.response.data.message);
+         toast.error('Something went wrong');
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -55,7 +54,7 @@ export default function AddTag({ refetch }) {
                   </div>
                   <div className="w-full">
                      {loading ? (
-                        <Button>Saving...</Button>
+                        <Button disabled>Saving...</Button>
                      ) : (
                         <Button onClick={handleSubmit} type='submit'>Save</Button>
                      )}

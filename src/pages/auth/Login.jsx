@@ -3,7 +3,7 @@ import instance from "../../lib/instance";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import GoogleIcon from "../../components/icon/Google";
 
 export default function Login() {
@@ -20,11 +20,12 @@ export default function Login() {
             email: email,
             password: password,
          });
+
+         toast.success('Login successfully');
          const token = Cookies.set("accessToken", res.data.accessToken);
 
          if (token) {
             window.history.pushState(null, "", '/note');
-            toast.success('Login successfully');
             setTimeout(() => {
                window.location.reload()
             }, 1000)

@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { useAuth } from "../provider/authProvider";
 import instance from "../lib/instance";
 import Person from "./icon/Person";
+import { FaEdit } from "react-icons/fa";
+import { SlLogout } from "react-icons/sl";
 
 export default function Component() {
   const [user, setUser] = useState('');
@@ -43,8 +45,8 @@ export default function Component() {
                 <span className="block text-sm">{user.username}</span>
                 <span className="block truncate text-sm font-medium">{user.email}</span>
               </Dropdown.Header>
-              <Dropdown.Item href="/profile">Edit profile</Dropdown.Item>
-              <Dropdown.Item href="/login" onClick={() => Cookies.remove('accessToken')}>Logout</Dropdown.Item>
+              <Dropdown.Item href="/profile" icon={FaEdit}>Edit profile</Dropdown.Item>
+              <Dropdown.Item href="/login" onClick={() => Cookies.remove('accessToken')} icon={SlLogout}>Logout</Dropdown.Item>
             </Dropdown>
           </div>
           <Navbar.Toggle />

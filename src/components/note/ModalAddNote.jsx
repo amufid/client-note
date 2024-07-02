@@ -1,10 +1,10 @@
 import { Button, Label, Modal, TextInput, Textarea, Select, FileInput, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import PropTypes from 'prop-types';
 
-export default function AddNote({ refetch, data }) {
+export default function AddNote({ refetch }) {
    const [openModal, setOpenModal] = useState(false);
    const [categories, setCategories] = useState([]);
    const [tags, setTags] = useState([]);
@@ -34,7 +34,6 @@ export default function AddNote({ refetch, data }) {
 
       try {
          await instance.post('/notes', formData)
-
          setTitle('');
          setContent('');
          setFilePath('');
@@ -42,12 +41,12 @@ export default function AddNote({ refetch, data }) {
          setCategoryId('');
          setImage(null);
          setOpenModal(false);
-         setLoading(false);
          toast.success('Note created successfully');
          refetch();
       } catch (error) {
-         console.log(error);
-         toast.error(error.response.data.message);
+         toast.error('Something went wrong');
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -121,17 +120,15 @@ export default function AddNote({ refetch, data }) {
                         required
                      />
                   </div>
-                  {data.length >= 1 && (
-                     <div className="max-w-md">
-                        <h3 className="text-gray-900 dark:text-white">Add image</h3>
-                        <div>
-                           <FileInput id="file-upload-helper-text" onChange={handleImage} helperText="Format : PNG, JPEG and JPG." />
-                        </div>
-                        <div className="flex justify-center">
-                           {image && <img src={image} alt="image" width={200} />}
-                        </div>
+                  <div className="max-w-md">
+                     <h3 className="text-gray-900 dark:text-white">Add image</h3>
+                     <div>
+                        <FileInput id="file-upload-helper-text" onChange={handleImage} helperText="Format : PNG, JPEG and JPG." />
                      </div>
-                  )}
+                     <div className="flex justify-center">
+                        {image && <img src={image} alt="image" width={200} />}
+                     </div>
+                  </div>
                   <div className="max-w-md">
                      <div className="mb-2 block">
                         <Label htmlFor="category" value="Select category" />
@@ -156,7 +153,7 @@ export default function AddNote({ refetch, data }) {
                   </div>
                   <div className="w-full">
                      {loading ? (
-                        <Button>
+                        <Button disabled>
                            <div>
                               <Spinner aria-label="Spinner button example" size="sm" />
                               <span className="pl-3">Saving...</span>
@@ -177,5 +174,4 @@ export default function AddNote({ refetch, data }) {
 
 AddNote.propTypes = {
    refetch: PropTypes.func,
-   data: PropTypes.array
 }

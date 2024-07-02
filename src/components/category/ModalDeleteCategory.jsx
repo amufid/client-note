@@ -1,7 +1,7 @@
 import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
 import instance from "../../lib/instance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import PropTypes from 'prop-types';
 import { FiDelete } from "react-icons/fi";
 import { HiOutlineExclamationCircle } from "react-icons/hi";

@@ -1,5 +1,5 @@
 import { Button, Label, Modal, TextInput } from "flowbite-react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-toastify";
 import instance from "../../lib/instance";
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
@@ -13,16 +13,20 @@ ModalUpdate.propTypes = {
 export default function ModalUpdate({ tag, refetch }) {
    const [name, setName] = useState(tag.name);
    const [modal, setModal] = useState(false);
+   const [loading, setLoading] = useState(false);
 
    const handleUpdate = async (e) => {
       e.preventDefault();
+      setLoading(true);
       try {
          await instance.put(`/tags/${tag.id}`, { name: name })
          toast.success('Tag updated successfully');
          setModal(false);
          refetch();
       } catch (error) {
-         console.log(error);
+         toast.error('Something went wrong')
+      } finally {
+         setLoading(false);
       }
    }
 
@@ -52,9 +56,15 @@ export default function ModalUpdate({ tag, refetch }) {
                         required
                      />
                   </div>
-                  <div className="w-full">
-                     <Button onClick={handleUpdate} type='submit'>Save</Button>
-                  </div>
+                  {loading ? (
+                     <div className="w-full">
+                        <Button disabled>Saving...</Button>
+                     </div>
+                  ) : (
+                     <div className="w-full">
+                        <Button onClick={handleUpdate} type='submit'>Save</Button>
+                     </div>
+                  )}
                </div>
             </Modal.Body>
          </Modal>
