@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../provider/authProvider.jsx";
+import { useAuth } from "../provider/useAuth";
 
 export const ProtectedRoute = () => {
    const { accessToken } = useAuth();
@@ -10,4 +10,14 @@ export const ProtectedRoute = () => {
    }
 
    return <Outlet />;
+}
+
+export const ReturnPage = () => {
+   const { accessToken } = useAuth()
+
+   if (accessToken) {
+      return <Navigate to='/note' />
+   }
+
+   return <Outlet />
 }

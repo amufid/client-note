@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { useAuth } from "../provider/authProvider.jsx";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { useAuth } from '../provider/useAuth'
+import { ProtectedRoute, ReturnPage } from "./ProtectedRoute";
 import Register from '../pages/auth/Register.jsx'
 import Login from '../pages/auth/Login.jsx'
 import Note from "../pages/note/Note.jsx";
@@ -12,37 +12,42 @@ import DetailCategory from "../pages/category/DetailCategory.jsx";
 import DetailTag from "../pages/tag/DetailTag.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import Confirm from "../pages/auth/Confirm.jsx";
+import NotFound from "../pages/NotFound.jsx";
 
 const Routes = () => {
    const { accessToken } = useAuth();
 
    const routesForPublic = [
       {
-         path: '/',
-         element: <Dashboard />,
-      },
-      {
-         path: '/login',
-         element: <Login />,
-      },
-      {
-         path: '/register',
-         element: <Register />,
-      },
-      {
-         path: '/google-auth',
-         element: <Confirm />,
-      },
-      {
-         path: '/*',
-         element: <h1>Page not found</h1>,
-      },
+         element: <ReturnPage />,
+         children: [
+            {
+               path: '/',
+               element: <Dashboard />,
+            },
+            {
+               path: '/login',
+               element: <Login />,
+            },
+            {
+               path: '/register',
+               element: <Register />,
+            },
+            {
+               path: '/google-auth',
+               element: <Confirm />,
+            },
+            {
+               path: '/*',
+               element: <NotFound />,
+            },
+         ]
+      }
    ];
 
    // route hanya bisa diakases oleh user yang sudah login
    const routesForAuthenticated = [
       {
-         path: '/',
          element: <ProtectedRoute />,
          children: [
             {
@@ -50,7 +55,7 @@ const Routes = () => {
                element: <Category />,
             },
             {
-               path: '/category/:id',
+               path: '/detailCategory',
                element: <DetailCategory />,
             },
             {
@@ -58,7 +63,7 @@ const Routes = () => {
                element: <Tag />,
             },
             {
-               path: '/tag/:id',
+               path: '/detailTag',
                element: <DetailTag />,
             },
             {
@@ -66,7 +71,7 @@ const Routes = () => {
                element: <Note />,
             },
             {
-               path: '/note/:id',
+               path: '/detailNote',
                element: <DetailNote />,
             },
             {
@@ -78,10 +83,6 @@ const Routes = () => {
    ];
 
    const routesForNotAuthenticatedOnly = [
-      {
-         path: "/",
-         element: <Dashboard />,
-      },
       {
          path: "/login",
          element: <Login />,

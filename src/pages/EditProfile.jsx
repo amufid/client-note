@@ -2,15 +2,12 @@ import { useState, useEffect } from 'react';
 import instance from '../lib/instance';
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
    const [username, setUsername] = useState('');
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [showPassword, setShowPassword] = useState(false);
-
-   const navigate = useNavigate();
 
    const getUser = async () => {
       try {
@@ -46,9 +43,7 @@ export default function Profile() {
             password: password,
          })
          toast.success('Update profile successfully');
-         setTimeout(() => {
-            navigate('/note');
-         }, 1000)
+         getUser();
       } catch (error) {
          toast.error('Something wen wrong');
       }

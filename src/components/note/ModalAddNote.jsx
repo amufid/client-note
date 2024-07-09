@@ -134,7 +134,7 @@ export default function AddNote({ refetch }) {
                         <Label htmlFor="category" value="Select category" />
                      </div>
                      <Select onChange={(e) => setCategoryId(e.target.value)} id="category" >
-                        <option value=''>Pilih kategori</option>
+                        <option defaultValue=''>Select category</option>
                         {categories.map((category) => (
                            <option key={category.id} value={category.id} >{category.name}</option>
                         ))}
@@ -145,7 +145,7 @@ export default function AddNote({ refetch }) {
                         <Label htmlFor="tag" value="Select tag" />
                      </div>
                      <Select onChange={(e) => setTagId(e.target.value)} id="tag" >
-                        <option value=''>Pilih tag</option>
+                        <option defaultValue=''>Select tag</option>
                         {tags.map((tag) => (
                            <option key={tag.id} value={tag.id} >{tag.name}</option>
                         ))}
