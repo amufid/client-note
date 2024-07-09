@@ -3,8 +3,8 @@ import instance from "../../lib/instance";
 import { toast } from "react-toastify";
 import { Button, Modal, Card } from "flowbite-react";
 import { Link } from "react-router-dom";
-import { encrypt } from "../../lib/encryptDecrypt";
 import { BsPinAngleFill } from "react-icons/bs";
+import { RiUnpinFill } from "react-icons/ri";
 
 export default function ModalPinNote() {
    const [notes, setNotes] = useState([]);
@@ -28,6 +28,16 @@ export default function ModalPinNote() {
       setOpenModal(true)
    }
 
+   const handleUpdate = async (id) => {
+      try {
+         await instance.put(`/notes/${id}`, { isPinned: false })
+         toast.success('Note unpinned')
+         getNotes()
+      } catch (error) {
+         toast.error('Failed update')
+      }
+   }
+
    return (
       <div>
          <Button color='purple' onClick={handleModal}>
@@ -36,7 +46,7 @@ export default function ModalPinNote() {
                <span className="ml-2">Pinned</span>
             </span>
          </Button>
-         <Modal show={openModal} size='md' onClose={() => setOpenModal(false)}>
+         <Modal show={openModal} size='md' onClose={() => setOpenModal(false)} className="text-slate-700 dark:text-slate-300">
             <Modal.Header>
                <span className="flex flex-row">
                   <BsPinAngleFill />
@@ -47,12 +57,15 @@ export default function ModalPinNote() {
                {notes.map(note => (
                   <Card key={note.id}>
                      <div className="space-y-6 p-6" >
-                        <Link to={`/note/${encrypt(note.id)}`}>
-                           <h2 className='text-lg sm:text-2xl tracking-tight text-gray-900 dark:text-white hover:dark:text-blue-500 hover:text-blue-400 mr-2'>
-                              {note.title}
-                           </h2>
-                        </Link>
-                        <pre className="responsive-pre text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        <div className="flex justify-between">
+                           <Link to='/detailNote' state={{ id: note.id }}>
+                              <h2 className='text-lg sm:text-xl tracking-tight hover:dark:text-blue-500 hover:text-blue-400 mr-2'>
+                                 {note.title}
+                              </h2>
+                           </Link>
+                           <button onClick={() => handleUpdate(note.id)}><RiUnpinFill /></button>
+                        </div>
+                        <pre className="responsive-pre text-sm leading-relaxed">
                            {note.content}
                         </pre>
                         <div className='grid grid-cols-3 justify-center items-center'>

@@ -1,31 +1,75 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { createContext, useMemo, useReducer } from "react";
 import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
 
 const AuthContext = createContext();
 
+const ACTIONS = {
+   setToken: 'setToken',
+   setRefreshToken: 'setRefreshToken',
+   clearToken: 'clearToken'
+}
+
+const deleteCookie = (name, path, domain) => {
+   document.cookie = `${name}=; path=${path}; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 UTC; sameSite=Strict`;
+};
+
+const authReducer = (state, action) => {
+   switch (action.type) {
+      // update the state with new access token 
+      case ACTIONS.setToken:
+         axios.defaults.headers.common['Authorization'] = 'Bearer' + action.payload;
+         Cookies.set('accessToken', action.payload);
+
+         return { ...state, accessToken: action.payload };
+
+      // update the state with new refresh token 
+      case ACTIONS.setRefreshToken:
+         Cookies.set('refreshToken', action.payload);
+
+         return { ...state, refreshToken: action.payload };
+
+      // delete all cookies
+      case ACTIONS.clearToken:
+         delete axios.defaults.headers.common['Authorization'];
+         Cookies.remove('accessToken')
+         deleteCookie('refreshToken', '/', 'localhost');
+
+         return { ...state, accessToken: null, refreshToken: null };
+
+      default:
+         toast.error('Unauthenticated')
+   }
+}
+
+const initialToken = {
+   accessToken: Cookies.get('accessToken'),
+   refreshToken: Cookies.get('refreshToken')
+}
+
 const AuthProvider = ({ children }) => {
-   const [accessToken, setAccessToken] = useState(Cookies.get('accessToken'));
+   const [state, dispatch] = useReducer(authReducer, initialToken);
 
    const setToken = (newToken) => {
-      setAccessToken(newToken);
+      dispatch({ type: ACTIONS.setToken, payload: newToken });
    }
 
-   useEffect(() => {
-      if (accessToken) {
-         axios.defaults.headers.common["Authorization"] = 'Bearer' + accessToken;
-         Cookies.set('accessToken', accessToken);
-      } else {
-         delete axios.defaults.headers.common["Authorization"];
-         Cookies.remove('accessToken');
-      }
-   }, [accessToken])
+   const setRefreshToken = (newRefreshToken) => {
+      dispatch({ type: ACTIONS.setRefreshToken, payload: newRefreshToken });
+   }
+
+   const clearToken = () => {
+      dispatch({ type: ACTIONS.clearToken })
+   }
 
    const contextValue = useMemo(() => ({
-      accessToken,
+      ...state,
       setToken,
-   }), [accessToken])
+      setRefreshToken,
+      clearToken
+   }), [state]);
 
    return (
       <AuthContext.Provider value={contextValue} >
@@ -34,12 +78,9 @@ const AuthProvider = ({ children }) => {
    )
 }
 
-export const useAuth = () => {
-   return useContext(AuthContext);
-};
-
-export default AuthProvider;
-
 AuthProvider.propTypes = {
    children: PropTypes.node
 }
+
+export { AuthContext }
+export default AuthProvider;

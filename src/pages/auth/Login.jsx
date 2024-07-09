@@ -1,16 +1,23 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import instance from "../../lib/instance";
-import { useState } from "react";
-import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import GoogleIcon from "../../components/icon/Google";
+import { useAuth } from "../../provider/useAuth";
 
 export default function Login() {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [showPassword, setShowPassword] = useState(false);
    const [loading, setLoading] = useState(false);
+   const { setToken, setRefreshToken } = useAuth();
+   const navigate = useNavigate()
+   const emailRef = useRef(null)
+
+   useEffect(() => {
+      emailRef.current.focus();
+   }, [])
 
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -21,20 +28,16 @@ export default function Login() {
             password: password,
          });
 
+         setToken(res.data.accessToken.token);
+         setRefreshToken(res.data.accessToken.refreshToken)
          toast.success('Login successfully');
-         const token = Cookies.set("accessToken", res.data.accessToken);
-
-         if (token) {
-            window.history.pushState(null, "", '/note');
-            setTimeout(() => {
-               window.location.reload()
-            }, 1000)
-         }
+         navigate('/note', { replace: true })
       } catch (error) {
-         setLoading(false)
          toast.error('Email or password wrong!');
+      } finally {
+         setLoading(false)
       }
-   };
+   }
 
    return (
       <div className="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center">
@@ -48,11 +51,11 @@ export default function Login() {
                            <Label htmlFor="email" value="Email" />
                         </div>
                         <TextInput
-                           id="email"
                            type="email"
                            name="email"
                            placeholder="Email"
-                           required shadow
+                           required
+                           ref={emailRef}
                            onChange={(e) => setEmail(e.target.value)} />
                      </div>
                      <div className="mb-2">
@@ -60,10 +63,9 @@ export default function Login() {
                            <Label htmlFor="password" value="Password" />
                         </div>
                         <TextInput
-                           id="password"
                            type={`${showPassword ? 'text' : 'password'}`}
                            name="password"
-                           required shadow
+                           required
                            onChange={(e) => setPassword(e.target.value)}
                            placeholder="Password" />
                      </div>

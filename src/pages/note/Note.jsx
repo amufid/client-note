@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { convertTime } from '../../lib/convertTime';
 import { debounce } from 'lodash';
 import Pagination from '../../components/note/Pagination';
-import { encrypt } from '../../lib/encryptDecrypt';
 import ModalAdd from '../../components/note/ModalAddNote';
 import ModalUpdateNote from '../../components/note/ModalUpdateNote';
 import ModalDeleteNote from '../../components/note/ModalDeleteNote';
@@ -26,7 +25,7 @@ const fetchNotes = async (search, sortBy, setNotes) => {
       const res = await instance.get(`/notes?search=${search}&${sortBy}`)
       setNotes(res.data.data)
    } catch (error) {
-      toast.error('Something went wrong')
+      toast.error(error.response.data.message)
    }
 }
 
@@ -129,100 +128,109 @@ export default function Note() {
                            <ModalPinNote />
                         </div>
                      </div>
+                     <div className='mr-2 mb-2'>
+                        <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
+                           <Dropdown.Item onClick={() => setSortBy()}>Sort</Dropdown.Item>
+                           <Dropdown.Divider />
+                           <Dropdown.Item onClick={() => setSortBy('createdAt=desc')}>Latest created</Dropdown.Item>
+                           <Dropdown.Item onClick={() => setSortBy('createdAt=asc')}>Oldest created</Dropdown.Item>
+                           <Dropdown.Item onClick={() => setSortBy('updatedAt=desc')}>Latest updated</Dropdown.Item>
+                           <Dropdown.Item onClick={() => setSortBy('updatedAt=asc')}>Oldest updated</Dropdown.Item>
+                        </Dropdown>
+                     </div>
                      <div>
-                        <FloatingLabel variant="outlined" label="Search title" className='w-54' onChange={e => setSearch(e.target.value)} />
+                        <ModalPinNote />
                      </div>
                   </div>
                </div>
             </div>
-            <div className='flex justify-center'>
-               <div className='flex flex-col'>
-                  {currentNotes.map(note => (
-                     <Card key={note.id} className="w-[370px] sm:w-[550px] mb-1 sm:mb-3 mx-5">
-                        <div className='flex flex-row justify-between'>
-                           <div className='flex flex-row'>
-                              <Link to={`/note/${encrypt(note.id)}`}>
-                                 <h2 className='text-lg sm:text-2xl tracking-tight text-gray-900 dark:text-white hover:dark:text-blue-500 hover:text-blue-400 mr-2'>
-                                    {note.title}
-                                 </h2>
-                              </Link>
-                           </div>
-                           <div className='flex flex-row'>
-                              <div className='flex flex-row mr-2'>
-                                 <ModalAddImage note={note} refetch={getNotes} />
-                                 <ModalUpdateNote note={note} refetch={getNotes} />
-                                 <ModalDeleteNote note={note} refetch={getNotes} />
-                              </div>
-                              <Dropdown
-                                 renderTrigger={() =>
-                                    <span className='hover:text-blue-500 dark:text-white text-slate-800 flex items-center'>
-                                       <SlOptions />
-                                    </span>}>
-                                 <Dropdown.Item>
-                                    <button
-                                       value={note.isPinned}
-                                       onClick={() => handlePin(note.id, note.isPinned)} >
-                                       {note.isPinned === null || note.isPinned === false ? (
-                                          <p className='w-full flex flex-row'><BsPinAngleFill /><span className='ml-3'>Pin note</span></p>
-                                       ) : (
-                                          <p className='w-full flex flex-row'><RiUnpinFill /><span className='ml-3'>Unpin note</span></p>
-                                       )}
-                                    </button>
-                                 </Dropdown.Item>
-                              </Dropdown>
-                           </div>
-                        </div>
-                        <pre className='responsive-pre font-normal text-gray-700 dark:text-gray-300'>
-                           {note.content}
-                        </pre>
-                        <Link to={`/note/${encrypt(note.id)}`}>
-                           <div className='grid grid-cols-3 justify-center items-center'>
-                              {note.attachment.map((note) => (
-                                 <div key={note.id} className='m-1'>
-                                    <img src={note.file_path} alt="image" className='w-[150px] h-auto mb-2' />
-                                 </div>
-                              ))}
-                           </div>
-                        </Link>
-                        <div className='flex flex-row justify-between'>
-                           <div className='mr-2'>
-                              <p className='font-normal text-gray-700 dark:text-gray-300'>Written on : </p>
-                              <p className='font-normal text-gray-700 dark:text-gray-300'>
+         </div>
+         <div className='flex justify-center dark:text-slate-300 text-slate-700 '>
+            <div className='flex flex-col'>
+               {currentNotes.map(note => (
+                  <Card key={note.id} className="w-[370px] sm:w-[550px] mb-1 sm:mb-3 mx-5">
+                     <div className='flex flex-row justify-between'>
+                        <div className='flex flex-col'>
+                           <Link to='/detailNote' state={{ id: note.id }}>
+                              <h2 className='text-lg sm:text-xl tracking-tight hover:dark:text-blue-500 hover:text-blue-400 mr-2'>
+                                 {note.title}
+                              </h2>
+                           </Link>
+                           <div className='mt-2'>
+                              <p className='text-xs'>
                                  {convertTime(note.created_at)}
                               </p>
                            </div>
-                           <div>
-                              {note.note_tags.map((note) => (
-                                 <div key={note.id} className='mr-2'>
-                                    <p className='font-normal text-gray-700 dark:text-gray-300'>
-                                       Tag : {note.tag.name}
-                                    </p>
-                                 </div>
-                              ))}
-                              {note.note_categories.map((note) => (
-                                 <div key={note.id}>
-                                    <p className='font-normal text-gray-700 dark:text-gray-300'>
-                                       Category : {note.category.name}
-                                    </p>
-                                 </div>
-                              ))}
-                           </div>
                         </div>
-                     </Card>
-                  ))}
-               </div>
-            </div>
-            <div className='flex justify-center py-7'>
-               {notes.length > 5 && (
-                  <Pagination
-                     currentPage={currentPage}
-                     totalPages={totalPages}
-                     onPageChangeNext={handlePageChangeNext}
-                     onPageChangePrev={handlePageChangePrev}
-                  />
-               )}
+                        <div className='flex flex-row'>
+                           <div className='flex flex-row mr-2'>
+                              <ModalAddImage note={note} refetch={getNotes} />
+                              <ModalUpdateNote note={note} refetch={getNotes} />
+                              <ModalDeleteNote note={note} refetch={getNotes} />
+                           </div>
+                           <Dropdown
+                              renderTrigger={() =>
+                                 <span className='hover:text-blue-500 flex mt-3'>
+                                    <SlOptions />
+                                 </span>}>
+                              <Dropdown.Item>
+                                 <button
+                                    value={note.isPinned}
+                                    onClick={() => handlePin(note.id, note.isPinned)} >
+                                    {note.isPinned === null || note.isPinned === false ? (
+                                       <p className='w-full flex flex-row'><BsPinAngleFill /><span className='ml-3'>Pin note</span></p>
+                                    ) : (
+                                       <p className='w-full flex flex-row'><RiUnpinFill /><span className='ml-3'>Unpin note</span></p>
+                                    )}
+                                 </button>
+                              </Dropdown.Item>
+                           </Dropdown>
+                        </div>
+                     </div>
+                     <pre className='responsive-pre text-sm'>
+                        {note.content}
+                     </pre>
+                     <Link to='/detailNote' state={{ id: note.id }}>
+                        <div className='grid grid-cols-3 justify-center items-center'>
+                           {note.attachment.map((note) => (
+                              <div key={note.id} className='m-1'>
+                                 <img src={note.file_path} alt="image" className='w-[150px] h-auto mb-2' />
+                              </div>
+                           ))}
+                        </div>
+                     </Link>
+                     <div className='flex flex-row justify-between'>
+                        <div>
+                           {note.note_tags.map((note) => (
+                              <div key={note.id} className='mr-2'>
+                                 <p className='text-xs'>
+                                    Tag : {note.tag.name}
+                                 </p>
+                              </div>
+                           ))}
+                           {note.note_categories.map((note) => (
+                              <div key={note.id}>
+                                 <p className='text-xs'>
+                                    Category : {note.category.name}
+                                 </p>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  </Card>
+               ))}
             </div>
          </div>
-      </>
+         <div className='flex justify-center py-7'>
+            {notes.length > 5 && (
+               <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChangeNext={handlePageChangeNext}
+                  onPageChangePrev={handlePageChangePrev}
+               />
+            )}
+         </div>
+      </div>
    )
 }

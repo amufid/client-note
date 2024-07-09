@@ -1,24 +1,23 @@
 import { Spinner } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Cookies from 'js-cookie'
+import { useAuth } from "../../provider/useAuth";
 
 export default function Confirm() {
    const location = useLocation();
-   const [getToken, setToken] = useState('')
+   const { setToken, setRefreshToken } = useAuth();
 
    useEffect(() => {
       const params = new URLSearchParams(location.search)
-      const token = params.get('token')
-      if (token) {
-         setToken(token)
-         Cookies.set('accessToken', getToken)
-         window.history.pushState(null, '', '/note');
-         if (Cookies.get('accessToken')) {
-            window.location.reload();
-         }
+      const accessToken = params.get('token')
+      const refreshToken = params.get('refreshToken')
+
+      if (accessToken) {
+         setToken(accessToken)
+         setRefreshToken(refreshToken)
+         window.location.href = '/note'
       }
-   }, [location.search, getToken])
+   }, [location.search, setToken, setRefreshToken])
 
    return (
       <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">

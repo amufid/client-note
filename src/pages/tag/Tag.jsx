@@ -3,7 +3,6 @@ import instance from '../../lib/instance'
 import { Table } from "flowbite-react";
 import ModalAddTag from '../../components/tag/ModalAddTag';
 import { Link } from 'react-router-dom';
-import { encrypt } from '../../lib/encryptDecrypt';
 import ModalUpdate from '../../components/tag/ModalUpdateTag';
 import ModalDelete from '../../components/tag/ModalDeleteTag';
 
@@ -24,7 +23,7 @@ export default function Tag() {
    }, [])
 
    return (
-      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
+      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen text-slate-700 dark:text-slate-300'>
          <h1 className="text-2xl py-5 text-center">List Tags</h1>
          <ModalAddTag refetch={getTags} />
          <div className="overflow-x-auto mx-auto w-[300px] sm:w-[400px] mb-10">
@@ -36,7 +35,11 @@ export default function Tag() {
                <Table.Body className="divide-y">
                   {tags.map((tag) => (
                      <Table.Row key={tag.id} className="bg-gray-100 dark:bg-gray-800 shadow-md">
-                        <Table.Cell><Link to={`/tag/${encrypt(tag.id)}`}>{tag.name}</Link></Table.Cell>
+                        <Table.Cell>
+                           <Link to='/detailTag' state={{ id: tag.id }}>
+                              <p className='text-sm hover:text-blue-500'>{tag.name}</p>
+                           </Link>
+                        </Table.Cell>
                         <Table.Cell>
                            <div className="flex flex-row">
                               <ModalDelete tag={tag} refetch={getTags} />

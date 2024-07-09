@@ -19,11 +19,11 @@
    /* Membuat teks dalam <pre> membungkus secara otomatis */
    word-wrap: break-word;
    /* Menambahkan pemecahan kata jika perlu */
-   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 p {
-   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .Toastify__toast-container--top-right {
