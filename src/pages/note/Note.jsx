@@ -105,13 +105,28 @@ export default function Note() {
    }
 
    return (
-      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
-         <div className='flex'>
-            <div className='flex mx-auto'>
-               <div className='flex w-[350px] sm:w-[550px] justify-between py-3 items-center'>
-                  <div className='flex flex-col sm:flex-row'>
-                     <div className='mr-2 mb-2 sm:mb-0'>
-                        <ModalAdd refetch={getNotes} />
+      <>
+         <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
+            <div className='flex'>
+               <div className='flex mx-auto'>
+                  <div className='flex w-[350px] sm:w-[550px] justify-between py-3 items-center'>
+                     <div className='flex flex-col sm:flex-row'>
+                        <div className='mr-2 mb-2 sm:mb-0'>
+                           <ModalAdd refetch={getNotes} />
+                        </div>
+                        <div className='mr-2 mb-2'>
+                           <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
+                              <Dropdown.Item onClick={() => setSortBy()}>Sort</Dropdown.Item>
+                              <Dropdown.Divider />
+                              <Dropdown.Item onClick={() => setSortBy('createdAt=desc')}>Latest created</Dropdown.Item>
+                              <Dropdown.Item onClick={() => setSortBy('createdAt=asc')}>Oldest created</Dropdown.Item>
+                              <Dropdown.Item onClick={() => setSortBy('updatedAt=desc')}>Latest updated</Dropdown.Item>
+                              <Dropdown.Item onClick={() => setSortBy('updatedAt=asc')}>Oldest updated</Dropdown.Item>
+                           </Dropdown>
+                        </div>
+                        <div>
+                           <ModalPinNote />
+                        </div>
                      </div>
                      <div className='mr-2 mb-2'>
                         <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
@@ -126,9 +141,6 @@ export default function Note() {
                      <div>
                         <ModalPinNote />
                      </div>
-                  </div>
-                  <div>
-                     <FloatingLabel variant="outlined" label="Search title" className='w-54' onChange={e => setSearch(e.target.value)} />
                   </div>
                </div>
             </div>

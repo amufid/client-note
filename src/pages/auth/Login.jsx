@@ -30,7 +30,6 @@ export default function Login() {
 
          setToken(res.data.accessToken.token);
          setRefreshToken(res.data.accessToken.refreshToken)
-
          toast.success('Login successfully');
          navigate('/note', { replace: true })
       } catch (error) {
