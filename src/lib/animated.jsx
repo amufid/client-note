@@ -13,15 +13,17 @@ export default function Animated({ children, from }) {
       visible: { opacity: 1, x: 0 }
    }
    return (
-      <motion.div
-         ref={ref}
-         initial='hidden'
-         animate={inView ? 'visible' : 'hidden'}
-         variants={variants}
-         transition={{ duration: 1.5 }}
-      >
-         {children}
-      </motion.div>
+      <div className="overflow-hidden relative">
+         <motion.div
+            ref={ref}
+            initial='hidden'
+            animate={inView ? 'visible' : 'hidden'}
+            variants={variants}
+            transition={{ duration: 1.5 }}
+         >
+            {children}
+         </motion.div>
+      </div>
    )
 }
 
