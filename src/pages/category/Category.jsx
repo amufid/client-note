@@ -23,7 +23,7 @@ export default function Category() {
    }, [])
 
    return (
-      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen text-slate-700 dark:text-slate-300'>
+      <div className='text-slate-700 dark:text-slate-100'>
          <h1 className="text-2xl py-5 text-center">List Categories</h1>
          <ModalAddCategory refetch={getCategories} />
          <div className="overflow-x-auto mx-auto w-auto sm:w-[500px] pb-10 shadow-sm">

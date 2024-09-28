@@ -1,7 +1,7 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import instance from "../../lib/instance";
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import GoogleIcon from "../../components/icon/Google";
 import { useAuth } from "../../provider/useAuth";
@@ -12,7 +12,6 @@ export default function Login() {
    const [showPassword, setShowPassword] = useState(false);
    const [loading, setLoading] = useState(false);
    const { setToken, setRefreshToken } = useAuth();
-   const navigate = useNavigate()
    const emailRef = useRef(null)
 
    useEffect(() => {
@@ -28,10 +27,12 @@ export default function Login() {
             password: password,
          });
 
-         setToken(res.data.accessToken.token);
-         setRefreshToken(res.data.accessToken.refreshToken)
-         toast.success('Login successfully');
-         navigate('/note', { replace: true })
+         if (res.data.accessToken.token) {
+            setToken(res.data.accessToken.token);
+            setRefreshToken(res.data.accessToken.refreshToken)
+            toast.success('Login successfully');
+            window.location.href = '/note'
+         }
       } catch (error) {
          toast.error('Email or password wrong!');
       } finally {

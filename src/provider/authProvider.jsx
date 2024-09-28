@@ -1,8 +1,10 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { createContext, useMemo, useReducer } from "react";
+import { createContext, useEffect, useMemo, useReducer } from "react";
 import PropTypes from 'prop-types';
 import { toast } from "react-toastify";
+import Navbar from '../components/Navbar'
+import instance from "../lib/instance";
 
 const AuthContext = createContext();
 
@@ -46,14 +48,15 @@ const authReducer = (state, action) => {
 
 const initialToken = {
    accessToken: Cookies.get('accessToken'),
-   refreshToken: Cookies.get('refreshToken')
+   refreshToken: Cookies.get('refreshToken'),
+   user: null
 }
 
 const AuthProvider = ({ children }) => {
    const [state, dispatch] = useReducer(authReducer, initialToken);
 
-   const setToken = (newToken) => {
-      dispatch({ type: ACTIONS.setToken, payload: newToken });
+   const setToken = (newToken, user) => {
+      dispatch({ type: ACTIONS.setToken, payload: newToken, user });
    }
 
    const setRefreshToken = (newRefreshToken) => {
@@ -64,6 +67,15 @@ const AuthProvider = ({ children }) => {
       dispatch({ type: ACTIONS.clearToken })
    }
 
+   useEffect(() => {
+      instance.get('/users/:id')
+         .then((res) => {
+            initialToken.user = res.data.data.username;
+            setToken(initialToken.accessToken, initialToken.user)
+         })
+         .catch((err) => console.log(err))
+   }, [])
+
    const contextValue = useMemo(() => ({
       ...state,
       setToken,
@@ -73,7 +85,9 @@ const AuthProvider = ({ children }) => {
 
    return (
       <AuthContext.Provider value={contextValue} >
-         {children}
+         <Navbar>
+            {children}
+         </Navbar>
       </AuthContext.Provider>
    )
 }

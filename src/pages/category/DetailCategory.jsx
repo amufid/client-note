@@ -24,7 +24,7 @@ export default function DetailCategory() {
    }, [id])
 
    return (
-      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen text-gray-700 dark:text-slate-300'>
+      <div className='text-gray-700 dark:text-slate-300'>
          <div className='flex justify-center'>
             <div className='flex flex-col my-5'>
                {category.map(category => (

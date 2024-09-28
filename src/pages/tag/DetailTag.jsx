@@ -23,7 +23,7 @@ export default function DetailTag() {
    }, [id])
 
    return (
-      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen text-slate-700 dark:text-slate-300'>
+      <div className='text-slate-700 dark:text-slate-300'>
          <div className='flex justify-center'>
             <div className='flex flex-col my-5'>
                {tag.map(tag => (
