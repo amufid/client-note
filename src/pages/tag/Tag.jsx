@@ -23,7 +23,7 @@ export default function Tag() {
    }, [])
 
    return (
-      <div className='bg-gray-100 dark:bg-gray-900 min-h-screen text-slate-700 dark:text-slate-300'>
+      <div className='text-slate-700 dark:text-slate-100'>
          <h1 className="text-2xl py-5 text-center">List Tags</h1>
          <ModalAddTag refetch={getTags} />
          <div className="overflow-x-auto mx-auto w-[300px] sm:w-[400px] mb-10">
@@ -34,7 +34,7 @@ export default function Tag() {
                </Table.Head>
                <Table.Body className="divide-y">
                   {tags.map((tag) => (
-                     <Table.Row key={tag.id} className="bg-gray-100 dark:bg-gray-800 shadow-md">
+                     <Table.Row key={tag.id} className="bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                         <Table.Cell>
                            <Link to='/detailTag' state={{ id: tag.id }}>
                               <p className='text-sm hover:text-blue-500'>{tag.name}</p>

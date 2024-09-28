@@ -45,13 +45,13 @@ export default function Note() {
 
    const sortLabel = useCallback(() => {
       if (sortBy === 'createdAt=desc') {
-         setDropdownSort('Latest created')
+         setDropdownSort('Latest cr...')
       } else if (sortBy === 'createdAt=asc') {
-         setDropdownSort('Oldest created')
+         setDropdownSort('Oldest cr...')
       } else if (sortBy === 'updatedAt=desc') {
-         setDropdownSort('Latest updated')
+         setDropdownSort('Latest up...')
       } else if (sortBy === 'updatedAt=asc') {
-         setDropdownSort('Oldest updated')
+         setDropdownSort('Oldest up...')
       }
    }, [sortBy])
 
@@ -106,32 +106,28 @@ export default function Note() {
 
    return (
       <>
-         <div className='bg-gray-100 dark:bg-gray-900 min-h-screen'>
-            <div className='flex'>
-               <div className='flex mx-auto'>
-                  <div className='flex w-[350px] sm:w-[550px] justify-between py-3 items-center'>
-                     <div className='flex flex-col sm:flex-row'>
-                        <div className='mr-2 mb-2 sm:mb-0'>
-                           <ModalAdd refetch={getNotes} />
-                        </div>
-                        <div className='mr-2 mb-2'>
-                           <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
-                              <Dropdown.Item onClick={() => setSortBy()}>Sort</Dropdown.Item>
-                              <Dropdown.Divider />
-                              <Dropdown.Item onClick={() => setSortBy('createdAt=desc')}>Latest created</Dropdown.Item>
-                              <Dropdown.Item onClick={() => setSortBy('createdAt=asc')}>Oldest created</Dropdown.Item>
-                              <Dropdown.Item onClick={() => setSortBy('updatedAt=desc')}>Latest updated</Dropdown.Item>
-                              <Dropdown.Item onClick={() => setSortBy('updatedAt=asc')}>Oldest updated</Dropdown.Item>
-                           </Dropdown>
-                        </div>
-                        <div>
-                           <ModalPinNote />
-                        </div>
-                     </div>
-                     <div>
-                        <FloatingLabel variant="outlined" label="Search title" className='w-54' onChange={e => setSearch(e.target.value)} />
-                     </div>
+         <div className='flex'>
+            <div className='flex w-full sm:w-[550px] flex-col sm:flex-row sm:justify-between sm:items-center mx-5 sm:mx-auto'>
+               <div className='flex flex-row sm:pt-0 pt-5'>
+                  <div className='mr-2 mb-2 sm:mb-0'>
+                     <ModalAdd refetch={getNotes} />
                   </div>
+                  <div className='mr-2 mb-2'>
+                     <Dropdown label={`${sortBy ? dropdownSort : 'Sort'}`} onChange={() => sortLabel()}>
+                        <Dropdown.Item onClick={() => setSortBy()}>Sort</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={() => setSortBy('createdAt=desc')}>Latest created</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setSortBy('createdAt=asc')}>Oldest created</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setSortBy('updatedAt=desc')}>Latest updated</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setSortBy('updatedAt=asc')}>Oldest updated</Dropdown.Item>
+                     </Dropdown>
+                  </div>
+                  <div>
+                     <ModalPinNote />
+                  </div>
+               </div>
+               <div className='py-5'>
+                  <FloatingLabel variant="outlined" label="Search title" className='w-54' onChange={e => setSearch(e.target.value)} />
                </div>
             </div>
             <div className='flex justify-center dark:text-slate-300 text-slate-700 '>
@@ -220,6 +216,16 @@ export default function Note() {
                   />
                )}
             </div>
+         </div>
+         <div className='flex justify-center py-7'>
+            {notes.length > 5 && (
+               <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChangeNext={handlePageChangeNext}
+                  onPageChangePrev={handlePageChangePrev}
+               />
+            )}
          </div>
       </>
    )
