@@ -55,6 +55,8 @@ export default function Register() {
                      </div>
                      <TextInput
                         {...register('username')}
+                        id="username"
+                        data-testid="username"
                         type="text"
                         name="username"
                         placeholder="Username"
@@ -68,6 +70,7 @@ export default function Register() {
                      </div>
                      <TextInput
                         {...register('email')}
+                        id="email"
                         type="email"
                         name="email"
                         placeholder="Email"
@@ -81,6 +84,8 @@ export default function Register() {
                      </div>
                      <TextInput
                         {...register('password')}
+                        id="password"
+                        data-testid="password"
                         type={`${showPassword ? 'text' : 'password'}`}
                         name="password"
                         required
@@ -94,6 +99,8 @@ export default function Register() {
                      </div>
                      <TextInput
                         {...register('repeatPassword')}
+                        id="repeatPassword"
+                        data-testid="repeatPassword"
                         type={`${showPassword ? 'text' : 'password'}`}
                         name="repeatPassword"
                         required
