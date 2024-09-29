@@ -52,6 +52,7 @@ export default function Login() {
                            <Label htmlFor="email" value="Email" />
                         </div>
                         <TextInput
+                           id="email"
                            type="email"
                            name="email"
                            placeholder="Email"
@@ -64,10 +65,12 @@ export default function Login() {
                            <Label htmlFor="password" value="Password" />
                         </div>
                         <TextInput
-                           type={`${showPassword ? 'text' : 'password'}`}
+                           id="password"
                            name="password"
-                           required
+                           type={`${showPassword ? 'text' : 'password'}`}
                            onChange={(e) => setPassword(e.target.value)}
+                           data-testid="password"
+                           required
                            placeholder="Password" />
                      </div>
                      <div className="flex items-center gap-2 justify-end mb-2">
